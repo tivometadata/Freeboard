@@ -40,7 +40,8 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 var B = fillPercent * 2 + (1 - fillPercent) * 11;
             }
 
-            return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
+            //return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
+			return "rgb(" + 169 + "," + 215 + "," + 11 + ")"
         }
 
         function createGauge() {
