@@ -40,8 +40,8 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 var B = fillPercent * 2 + (1 - fillPercent) * 11;
             }
 
-            //return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
-			return "rgb(" + 169 + "," + 215 + "," + 11 + ")"
+           // return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
+            return "rgb(" +169 + "," + 215 + "," +11+ ")"
         }
 
         function createGauge() {
@@ -129,21 +129,36 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         }
 
         self.onCalculatedValueChanged = function (settingName, newValue) {
+           if (settingName === "max_value") {
+                if (!_.isUndefined(gaugeFill) && !_.isUndefined(maxValueLabel)) {
+                    newValue = _.isUndefined(newValue) ? 0 : newValue;
+                    maxValueLabel.attr({
+                        "text" : newValue
+                    });
+                }
+            }
+            
+            
             if (settingName === "value") {
                 if (!_.isUndefined(gaugeFill) && !_.isUndefined(valueText)) {
 
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
-                    var fillVal = 160 * (newValue - currentSettings.min_value)/(currentSettings.max_value - currentSettings.min_value);
-
-                    fillVal = fillVal > 160 ? 160 : fillVal;
-                    fillVal = fillVal < 0 ? 0 : fillVal;
-
-                    var fillColor = getColor(fillVal / 160);
-
-                    gaugeFill.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
                     valueText.attr({
                         "text" : newValue
                     });
+                }
+            }
+            
+			if (settingName === "percentage_process") {
+                if (!_.isUndefined(gaugeFill) && !_.isUndefined(valueText)) {
+
+                    newValue = _.isUndefined(newValue) ? 0 : newValue;
+					 var fillVal = 160 *currentSettings.percentage_process;
+					 fillVal = fillVal > 160 ? 160 : fillVal;
+					 fillVal = fillVal < 0 ? 0 : fillVal;
+					 var fillColor = getColor(fillVal / 160);
+					 gaugeFill.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
+
                 }
             }
         }
@@ -189,8 +204,13 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             {
                 name: "max_value",
                 display_name: "Maximum",
-                type: "number",
-                default_value: 100
+                type: "calculated"
+            },
+            {
+                name: "percentage_process",
+                display_name: "Percentage",
+                type: "calculated"
+            
             }
         ],
         newInstance: function (settings, newInstanceCallback) {
