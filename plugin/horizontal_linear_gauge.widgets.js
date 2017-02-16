@@ -153,7 +153,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 if (!_.isUndefined(gaugeFill) && !_.isUndefined(valueText)) {
 
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
-					 var fillVal = 160 *currentSettings.percentage_process;
+					 var fillVal = 160 * newValue;
 					 fillVal = fillVal > 160 ? 160 : fillVal;
 					 fillVal = fillVal < 0 ? 0 : fillVal;
 					 var fillColor = getColor(fillVal / 160);
