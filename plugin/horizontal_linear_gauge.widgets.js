@@ -136,7 +136,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         }
 
         self.onCalculatedValueChanged = function (settingName, newValue) {
-			var process , complete ;
+			var process = 0 , complete = 0 ;
            if (settingName === "max_value") {
                 if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(maxValueLabel)) {
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
@@ -148,12 +148,15 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             
             
             if (settingName === "complete_value") {
+				 if (!_.isUndefined(complete_value)) {
 						complete = newValue;
+				 }
             }
             
 		   if (settingName === "process_value") {
-                
+                 if (!_.isUndefined(process_value)) {
 						process = newValue;
+				 }
             }
 			var textvalue = process + "/" + complete;
 			 valueText.attr({
