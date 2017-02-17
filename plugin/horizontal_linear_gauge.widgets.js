@@ -10,7 +10,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 
         var self = this;
         var paper = null;
-        var gaugeFill = null;
+        var gaugeFill_Complete = null,gaugeFill_Process = null;
         var width, height;
         var valueText, unitsText;
         var minValueLabel, maxValueLabel;
@@ -21,7 +21,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 
         /* get the color for a fill percentage
            these colors match the justGage library for radial guagues */
-        function getColor(fillPercent) {
+        function getDynamicColors(fillPercent) {
             // mix colors
             // green rgb(169,215,11) #a9d70b
             // yellow rgb(249,200,2) #f9c802
@@ -40,10 +40,16 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 var B = fillPercent * 2 + (1 - fillPercent) * 11;
             }
 
-           // return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
-            return "rgb(" +169 + "," + 215 + "," +11+ ")"
+            return "rgb(" + Math.round(R) + "," + Math.round(G) + "," + Math.round(B) + ")"
         }
 
+		function getColor(color)
+		{
+			if (color == "Yellow")
+				return "rgb(" +249 + "," + 200 + "," +2+ ")" 
+			else
+				return "rgb(" +169 + "," + 215 + "," +11+ ")"
+		}
         function createGauge() {
             width = gaugeElement.width();
             height = 100;
@@ -101,7 +107,8 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             });
 
             // fill to 0 percent
-            gaugeFill = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
+            gaugeFill_Complete = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
+			gaugeFill_Process = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
         }
         self.render = function (element) {
             $(element).append(titleElement.html(currentSettings.title)).append(gaugeElement);
@@ -129,8 +136,9 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         }
 
         self.onCalculatedValueChanged = function (settingName, newValue) {
+			var process , complete ;
            if (settingName === "max_value") {
-                if (!_.isUndefined(gaugeFill) && !_.isUndefined(maxValueLabel)) {
+                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(maxValueLabel)) {
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
                     maxValueLabel.attr({
                         "text" : newValue
@@ -139,25 +147,45 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             }
             
             
-            if (settingName === "value") {
-                if (!_.isUndefined(gaugeFill) && !_.isUndefined(valueText)) {
-
-                    newValue = _.isUndefined(newValue) ? 0 : newValue;
-                    valueText.attr({
-                        "text" : newValue
+            if (settingName === "complete_value") {
+                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
+						complete = newValue;
+						
                     });
                 }
             }
             
-			if (settingName === "percentage_process") {
-                if (!_.isUndefined(gaugeFill) && !_.isUndefined(valueText)) {
+		   if (settingName === "process_value") {
+                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
+						process = newValue
+                    });
+                }
+            }
+			 valueText.attr({
+			 "text" : process + "/" + complete });
+			
+			if (settingName === "percentage_complete") {
+                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
 
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
 					 var fillVal = 160 * newValue;
 					 fillVal = fillVal > 160 ? 160 : fillVal;
 					 fillVal = fillVal < 0 ? 0 : fillVal;
 					 var fillColor = getColor(fillVal / 160);
-					 gaugeFill.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
+					 gaugeFill_Complete.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
+
+                }
+            }
+			
+			if (settingName === "percentage_processed") {
+                if (!_.isUndefined(gaugeFill_Process) && !_.isUndefined(valueText)) {
+
+                    newValue = _.isUndefined(newValue) ? 0 : newValue;
+					 var fillVal = 160 * newValue;
+					 fillVal = fillVal > 160 ? 160 : fillVal;
+					 fillVal = fillVal < 0 ? 0 : fillVal;
+					 var fillColor = getColor(fillVal / 160);
+					 gaugeFill_Process.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
 
                 }
             }
@@ -186,8 +214,13 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 type: "text"
             },
             {
-                name: "value",
-                display_name: "Value",
+                name: "complete_value",
+                display_name: "Completed File Value",
+                type: "calculated"
+            },
+			{
+                name: "process_value",
+                display_name: "Processed File Value",
                 type: "calculated"
             },
             {
@@ -207,8 +240,13 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 type: "calculated"
             },
             {
-                name: "percentage_process",
-                display_name: "Percentage",
+                name: "percentage_complete",
+                display_name: "Complete Percentage",
+                type: "calculated"
+            },
+			{
+                name: "percentage_processed",
+                display_name: "Processed Percentage",
                 type: "calculated"
             
             }
