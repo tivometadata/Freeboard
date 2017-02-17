@@ -148,18 +148,16 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             
             
             if (settingName === "complete_value") {
-                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
 						complete = newValue;
-                }
             }
             
 		   if (settingName === "process_value") {
-                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
+                
 						process = newValue;
-                }
             }
+			var textvalue = process + "/" + complete;
 			 valueText.attr({
-			 "text" : process.concate("/",complete)});
+			 "text" : textvalue});
 			
 			if (settingName === "percentage_complete") {
                 if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
