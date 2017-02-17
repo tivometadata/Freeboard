@@ -14,6 +14,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         var width, height;
         var valueText, unitsText;
         var minValueLabel, maxValueLabel;
+		var process = 0 , complete = 0 ;
         //var currentValue = 0;
         //var colors = ["#a9d70b", "#f9c802", "#ff0000"];
 
@@ -136,7 +137,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         }
 
         self.onCalculatedValueChanged = function (settingName, newValue) {
-			var process = 0 , complete = 0 ;
+		
            if (settingName === "max_value") {
                 if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(maxValueLabel)) {
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
