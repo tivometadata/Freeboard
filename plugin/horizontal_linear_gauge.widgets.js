@@ -159,7 +159,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
                 }
             }
 			 valueText.attr({
-			 "text" : process + "/" + complete });
+			 "text" : process.concate("/",complete)});
 			
 			if (settingName === "percentage_complete") {
                 if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
@@ -181,7 +181,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 					 var fillVal = 160 * newValue;
 					 fillVal = fillVal > 160 ? 160 : fillVal;
 					 fillVal = fillVal < 0 ? 0 : fillVal;
-					 var fillColor = getColor(fillVal / 160);
+					 var fillColor = getColor("Yellow");
 					 gaugeFill_Process.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
 
                 }
