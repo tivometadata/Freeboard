@@ -159,7 +159,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 						process = newValue;
 				 }
             }
-			var textvalue = process + "/" + complete;
+			var textvalue = process ;
 			 valueText.attr({
 			 "text" : textvalue});
 			
