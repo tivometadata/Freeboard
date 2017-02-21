@@ -157,7 +157,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 		   if (settingName === "process_value") {
 				process = _.isUndefined(newValue) ? 0 : newValue;
             }
-			var textvalue = complete+ '/'+ process;
+			var textvalue = complete+ ' / '+ process;
 			 valueText.attr({
 			 "text" : textvalue});
 			
