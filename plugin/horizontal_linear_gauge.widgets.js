@@ -15,6 +15,7 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
         var valueText, unitsText;
         var minValueLabel, maxValueLabel;
 		var process = 0 , complete = 0 ;
+		var ratio_c = 0.0, ratio_p = 0.0;
         //var currentValue = 0;
         //var colors = ["#a9d70b", "#f9c802", "#ff0000"];
 
@@ -108,8 +109,9 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
             });
 
             // fill to 0 percent
-            gaugeFill_Complete = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
 			gaugeFill_Process = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
+			gaugeFill_Complete = paper.rect(width / 2 - gaugeWidth / 2, height / 3 - gaugeHeight / 2, 0, gaugeHeight);
+
         }
         self.render = function (element) {
             $(element).append(titleElement.html(currentSettings.title)).append(gaugeElement);
@@ -159,31 +161,34 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 			 valueText.attr({
 			 "text" : textvalue});
 			
-			if (settingName === "percentage_complete") {
-                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
-
-                    newValue = _.isUndefined(newValue) ? 0 : newValue;
-					 var fillVal = 160 * newValue;
-					 fillVal = fillVal > 160 ? 160 : fillVal;
-					 fillVal = fillVal < 0 ? 0 : fillVal;
-					 var fillColor = getColor(fillVal / 160);
-					 gaugeFill_Complete.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
-
-                }
-            }
 			
 			if (settingName === "percentage_processed") {
                 if (!_.isUndefined(gaugeFill_Process) && !_.isUndefined(valueText)) {
 
                     newValue = _.isUndefined(newValue) ? 0 : newValue;
-					 var fillVal = 160 * newValue;
-					 fillVal = fillVal > 160 ? 160 : fillVal;
-					 fillVal = fillVal < 0 ? 0 : fillVal;
-					 var fillColor = getColor("Yellow");
-					 gaugeFill_Process.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
+					ratio_p = newValue;
 
                 }
             }
+			
+			if (settingName === "percentage_complete") {
+                if (!_.isUndefined(gaugeFill_Complete) && !_.isUndefined(valueText)) {
+
+                    newValue = _.isUndefined(newValue) ? 0 : newValue;
+					ratio_c = newValue;
+                }
+            }
+			var fillVal = 160 * (ratio_p+ratio_c);
+			fillVal = fillVal > 160 ? 160 : fillVal;
+			fillVal = fillVal < 0 ? 0 : fillVal;
+			var fillColor = getColor("Yellow");
+			gaugeFill_Process.animate({"width": fillVal, "fill": fillColor, "stroke": fillColor}, 500, ">");
+			
+			var fillVal_c = 160 * ratio_c;
+			fillVal_c = fillVal_c > 160 ? 160 : fillVal_c;
+			fillVal_c = fillVal_c < 0 ? 0 : fillVal_c;
+			var fillColor_c = getColor(fillVal_c / 160);
+			gaugeFill_Complete.animate({"width": fillVal_c, "fill": fillColor_c, "stroke": fillColor_c}, 500, ">");
         }
 
         self.onDispose = function () {
