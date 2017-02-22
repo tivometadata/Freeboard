@@ -74,14 +74,14 @@ freeboard.addStyle('linear-gauge',"width:200px;height:100px;display:inline-block
 
             minValueLabel.attr({
                 "font-family": "arial",
-                "font-size": "10",
+                "font-size": "15",
                 "fill": "#b3b3b3",
                 "text-anchor": "end"
             });
 
             maxValueLabel.attr({
                 "font-family": "arial",
-                "font-size": "10",
+                "font-size": "15",
                 "fill": "#b3b3b3",
                 "text-anchor": "start"
             });
